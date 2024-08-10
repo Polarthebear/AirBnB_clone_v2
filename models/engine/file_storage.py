@@ -15,6 +15,10 @@ class FileStorage:
     __file_path = 'file.json'
     __objects = {}
 
+    all_classes = {'BaseModel': BaseModel, 'User': User,
+                   'State': State, 'City': City, 'Amenity': Amenity,
+                   'Place': Place, 'Review': Review}
+
     def all(self, cls=None):
         """Returns a dictionary of models currently in storage"""
         all_return = {}
@@ -46,12 +50,6 @@ class FileStorage:
 
     def reload(self):
         """Loads storage dictionary from file"""
-
-        classes = {
-                    'BaseModel': BaseModel, 'User': User, 'Place': Place,
-                    'State': State, 'City': City, 'Amenity': Amenity,
-                    'Review': Review
-                  }
         try:
             temp = {}
             with open(FileStorage.__file_path, 'r') as f:
