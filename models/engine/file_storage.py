@@ -9,31 +9,31 @@ from models.city import City
 from models.amenity import Amenity
 from models.review import Review
 
+classes = {
+        'BaseModel': BaseModel,
+        'User': User,
+        'State': State,
+        'City': City,
+        'Amenity': Amenity,
+        'Place': Place,
+        'Review': Review
+}
+
 
 class FileStorage:
     """This class manages storage of hbnb models in JSON format"""
     __file_path = 'file.json'
     __objects = {}
 
-    all_classes = {'BaseModel': BaseModel, 'User': User,
-                   'State': State, 'City': City, 'Amenity': Amenity,
-                   'Place': Place, 'Review': Review}
-
     def all(self, cls=None):
-        """Returns a dictionary of models currently in storage"""
-        all_return = {}
-
-        # if cls is valid
-        if cls:
-            if cls.__name__ in self.all_classes:
-                # copy objects of cls to temp dict
-                for key, val in self.__objects.items():
-                    if key.split('.')[0] == cls.__name__:
-                        all_return.update({key: val})
-        else:  # if cls is none
-            all_return = self.__objects
-
-        return all_return
+        """returns the dictionary __objects"""
+        if cls is not None:
+            new_dict = {}
+            for key, value in self.__objects.items():
+                if cls == value.__class__ or cls == value.__class__.__name__:
+                    new_dict[key] = value
+            return new_dict
+        return self.__objects
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
@@ -60,8 +60,8 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
-        """delete obj from __objects if present"""
-        if obj:
-            # format key from obj
-            key = "{}.{}".format(type(obj).__name__, obj.id)
-            del self.__objects[key]
+        """delete obj from __objects if it inside"""
+        if obj is not None:
+            key = obj.__class__.__name__ + '.' + obj.id
+            if key in self.__objects:
+                del self.__objects[key]
